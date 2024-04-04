@@ -12,8 +12,8 @@ import (
 
 func NewClient() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     "39.108.70.103:6379",
-		Password: "wook1847",
+		Addr:     "127.0.0.1:6379", //redis实例的ip ,port
+		Password: "",               //有设置密码就填写密码
 	})
 }
 
@@ -25,27 +25,27 @@ func main() {
 	fmt.Println(val)
 
 	key := "mylock"
-	lock1 := redislock.NewRedisLock(client, key)
-	lock2 := redislock.NewRedisLock(client, key)
+	lock := redislock.NewRedisLock(client, key)
 
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	go func() {
-		//lock1尝试获取锁
-		if success, err := lock1.Lock(); success && err == nil {
-			fmt.Println("go lock1 get..")
+		//尝试获取锁
+		if success, err := lock.Lock(); success && err == nil {
+			fmt.Println("go lock get..")
 			time.Sleep(4 * time.Second)
-			lock1.Unlock()
+			lock.Unlock()
 		}
 		wg.Done()
 	}()
 
-	//lock2尝试获取锁
-	if success, err := lock2.Lock(); success && err == nil {
-		fmt.Println("lock2 get...")
+	//尝试获取锁
+	// time.Sleep(1 * time.Second)
+	if success, err := lock.Lock(); success && err == nil {
+		fmt.Println(" main lock get...")
 		time.Sleep(7 * time.Second)
-		lock2.Unlock()
+		lock.Unlock()
 	}
 	wg.Wait()
 }
