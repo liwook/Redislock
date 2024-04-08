@@ -2,10 +2,10 @@
 基于go-redis实现的redis分布式锁
 + 支持阻塞模式获取锁,轮询等待锁   
 + 支持看门狗模式,可以对锁过期进行自动续期  
-+ 支持红锁    
-  go-redis连接使用redis
-  ```go
-  ​
++ 支持红锁
+     
+go-redis连接使用redis  
+  ```go​
 func NewClient() *redis.Client {
 	return redis.NewClient(&redis.Options{
 		Addr:     "127.0.0.1:6379",    //自己的redis实例的ip和port
