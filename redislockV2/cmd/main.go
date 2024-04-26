@@ -80,27 +80,28 @@ func testWatchDog() {
 	fmt.Println(val)
 
 	key := "blockLock"
-	lock := redislock.NewRedisLock(client, key, redislock.WithBlock(), redislock.WithExpire(5*time.Second), redislock.WithBlockWaiting(15*time.Second))
+	lock1 := redislock.NewRedisLock(client, key, redislock.WithBlock(), redislock.WithExpire(5*time.Second), redislock.WithBlockWaiting(15*time.Second))
+	lock2 := redislock.NewRedisLock(client, key, redislock.WithBlock(), redislock.WithExpire(5*time.Second), redislock.WithBlockWaiting(15*time.Second))
 
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	go func() {
 		//尝试获取锁
-		if success, err := lock.Lock(); success && err == nil {
+		if success, err := lock1.Lock(); success && err == nil {
 			fmt.Println("go BLOCKlock get..")
 			time.Sleep(4 * time.Second)
-			lock.Unlock()
+			lock1.Unlock()
 		}
 
 		wg.Done()
 	}()
 
 	//尝试获取锁
-	if success, err := lock.Lock(); success && err == nil {
+	if success, err := lock2.Lock(); success && err == nil {
 		fmt.Println("main BLOCKlock get...")
 		time.Sleep(7 * time.Second)
-		lock.Unlock()
+		lock2.Unlock()
 	}
 	wg.Wait()
 }
