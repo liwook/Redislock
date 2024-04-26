@@ -12,8 +12,8 @@ import (
 
 func NewClient() *redis.Client {
 	return redis.NewClient(&redis.Options{
-		Addr:     "39.108.70.103:6379",
-		Password: "wook1847",
+		Addr:     "127.0.0.1:6379",
+		Password: "",
 	})
 }
 
